@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC 
+	    "-//mybatis.org//DTD Mapper 3.0//EN"
+	    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oceansoft.mapper.EquipmentMapper">
+	
+	<resultMap type="equipment" id="equipmentList">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="no" property="no"/>
+		<result column="remark" property="remark"/>
+		<result column="state" property="state"/>
+		<association property="equipmentType" column="typeId" 
+			select="com.oceansoft.mapper.EquipmentTypeMapper.getEquipmentTypeById"></association>
+	</resultMap>
+		
+	
+	<select id="getEquipementTotalWithTypeId" resultType="Integer"
+		parameterType="Integer">
+		select count(1) from t_equipment where typeId = #{id}
+	</select>
+	
+	<select id="getEquipmentList" parameterType="Map" resultMap="equipmentList">
+		select * from t_equipment
+		<where>
+			<if test="equipment.name != null and equipment.name != ''">
+				and name like CONCAT(CONCAT('%',#{equipment.name}),'%')
+			</if>
+			<if test="equipment.remark != null and equipment.remark != ''">
+				and remark like CONCAT(CONCAT('%',#{equipment.remark}),'%')
+			</if>
+		</where>
+		limit #{start},#{size}
+	</select>
+	
+	<select id="getEquipmentTotal" parameterType="equipment" resultType="Integer">
+		select count(1) from t_equipment
+		<where>
+			<if test="name != null and name != ''">
+				and name like CONCAT(CONCAT('%',#{name}),'%')
+			</if>
+			<if test="remark != null and remark != ''">
+				and remark like CONCAT(CONCAT('%',#{remark}),'%')
+			</if>
+		</where>
+	</select>
+	
+	<select id="getEquipmentById" parameterType="Integer" resultMap="equipmentList">
+		select * from t_equipment where id = #{id}
+	</select>
+	
+	<delete id="deleteEquipment" parameterType="Integer">
+		delete from t_equipment where id = #{id}
+	</delete>
+	
+	<update id="update" parameterType="equipment">
+		update t_equipment 
+		<set>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="no != null">
+				no = #{no},
+			</if>
+			<if test="equipmentType != null">
+				typeId = #{equipmentType.id},
+			</if>
+			<if test="state != null">
+			 	state = #{state},
+			</if>
+			<if test="remark != null">
+				remark = #{remark},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<insert id="save" parameterType="equipment">
+		insert into t_equipment values(null,#{name},#{no},#{equipmentType.id},#{state},#{remark})
+	</insert>
+</mapper>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC 
+	    "-//mybatis.org//DTD Mapper 3.0//EN"
+	    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oceansoft.mapper.EquipmentTypeMapper">
+
+	<resultMap type="equipmentType" id="EquipmentTypeList">
+		<id column="id" property="id"></id>
+		<result column="typeName" property="typeName"></result>
+		<result column="remark" property="remark"></result>
+	</resultMap>
+
+	<select id="getEquipmentList" parameterType="Map" resultMap="EquipmentTypeList">
+		select * from t_equipmenttype
+		<where>
+			<if test="equipmentType.typeName != null">
+				and typeName like CONCAT('%',CONCAT(#{equipmentType.typeName},'%'))
+			</if>
+			<if test="equipmentType.remark != null">
+				and remark like CONCAT('%',CONCAT(#{equipmentType.remark},'%'))
+			</if>
+		</where>
+		limit #{start},#{size}
+	</select>
+	
+	<select id="getEquipmentListTotal" parameterType="equipmentType" resultType="Integer">
+		select count(1) from t_equipmenttype
+		<where>
+			<if test="typeName != null">
+				and typeName like CONCAT(CONCAT('%',#{typeName}),'%')
+			</if>
+			<if test="remark != null">
+				and remark like CONCAT(CONCAT('%',#{remark}),'%')
+			</if>
+		</where>
+	</select>
+	
+	<select id="getEquipmentTypeById" parameterType="Integer" resultType="equipmentType">
+		select * from t_equipmenttype where id = #{id}
+	</select>
+	
+	<select id="getAllEquipmentType" resultMap="EquipmentTypeList">
+		select * from t_equipmenttype
+	</select>
+	
+	<delete id="deleteEquipmentType" parameterType="Integer">
+		delete from t_equipmenttype where id = #{id}
+	</delete>
+	
+	<update id="updateEquipmentType" parameterType="equipmentType">
+		update t_equipmenttype 
+		<set>
+			<if test="typeName != null">
+				typeName = #{typeName},
+			</if>
+			<if test="remark != null">
+				remark = #{remark},
+			</if>
+		</set>
+	</update>
+	
+	<insert id="saveEquipmentType" parameterType="equipmentType">
+		insert into t_equipmenttype values(null,#{typeName},#{remark})
+	</insert>
+</mapper>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC 
+	    "-//mybatis.org//DTD Mapper 3.0//EN"
+	    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	    
+<mapper namespace="com.oceansoft.mapper.DepartmentMapper">
+	
+	<resultMap type="department" id="DepartmentList">
+		<id column="id" property="id"></id>
+		<result column="deptName" property="deptName"></result>
+		<result column="remark" property="remark"></result>
+	</resultMap>
+	
+	<select id="getDepartmentList" parameterType="Map" resultMap="DepartmentList">
+		select * from t_department 
+			<if test="department.deptName!=null">
+				where deptName like #{department.deptName}
+			</if>
+		limit #{start},#{size}
+	</select>
+	
+	<select id="getDepartmentListTotal" resultType="Integer" parameterType="Department">
+		select count(1) from t_department 
+		<where>
+			<if test="deptName!=null">
+				and deptName like CONCAT(CONCAT('%',#{deptName}),'%')
+			</if>
+		</where>
+	</select>
+	
+	<select id="findById" resultType="Department" parameterType="Integer">
+		select * from t_department where id = #{id}
+	</select>
+	
+	<select id="findAllDepartment" resultMap="DepartmentList">
+		select * from t_department
+	</select>
+	
+	<insert id="saveDepartment" parameterType="Department">
+		insert into t_department values(null,#{deptName},#{remark})
+	</insert>
+	
+	<delete id="deleteDepartment" parameterType="Integer">
+		delete from t_department where id = #{id}
+	</delete>
+	
+	<update id="updateDepartment" parameterType="Department">
+		update t_department 
+		<set>
+			<if test="deptName != null">
+				deptName = #{deptName},
+			</if>
+			<if test="remark != null">
+				remark = #{remark}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+</mapper>

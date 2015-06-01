@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC 
+	    "-//mybatis.org//DTD Mapper 3.0//EN"
+	    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oceansoft.mapper.UserMapper">
+	
+	<resultMap type="user" id="userList">
+		<id column="id" property="id"></id>
+		<result column="userName" property="userName"></result>
+		<result column="password" property="password"></result>
+		<result column="trueName" property="trueName"></result>
+		<result column="roleName" property="roleName"></result>
+		<association property="department" column="deptId" select="com.oceansoft.mapper.DepartmentMapper.findById"></association>
+	</resultMap>
+	
+	<select id="login" parameterType="User" resultType="User">
+		select * from t_user where userName = #{userName} and password = #{password} 
+	</select>
+	
+	<select id="getUserList" parameterType="Map" resultMap="userList">
+		select * from t_user 
+		<where>
+			<if test="user.userName != null">
+				and userName like CONCAT('%',CONCAT(#{user.userName},'%'))
+			</if>
+			<if test="user.trueName != null">
+				and trueName like CONCAT('%',CONCAT(#{user.trueName},'%'))
+			</if>
+		</where>
+		limit #{start},#{size}
+	</select>
+	
+	<select id="getUserListTotal" parameterType="User" resultType="Integer">
+		select count(1) from t_user
+		<where>
+			<if test="userName != null">
+				and userName like  CONCAT('%',CONCAT(#{userName},'%'))
+			</if>
+			<if test="trueName != null">
+				and trueName like CONCAT('%',CONCAT(#{trueName},'%'))
+			</if>
+		</where>
+	</select>
+	
+	<select id="findById" parameterType="Integer" resultMap="userList">
+		select * from t_user where id = #{id}
+	</select>
+	
+	<select id="getTotalByDept" parameterType="Integer" resultType="Integer">
+		select count(1) from t_user where deptId = #{id}
+	</select>
+	
+	<delete id="deleteUser" parameterType="Integer">
+		delete from t_user where id = #{id}
+	</delete>
+	
+	<insert id="saveUser" parameterType="User">
+		insert into t_user values(null,#{userName},#{password},#{trueName},#{roleName},#{department.id})
+	</insert>
+	
+	<update id="updateUser" parameterType="User">
+		update t_user
+		<set>
+			<if test="userName != null">
+			    userName = #{userName},
+			</if>
+			<if test="password != null">
+				password = #{password},
+			</if>
+			<if test="trueName != null">
+			 	trueName = #{trueName},
+			</if>
+			<if test="roleName != null">
+				roleName = #{roleName},
+			</if>
+			<if test="department != null">
+				deptId = #{department.id},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+</mapper>

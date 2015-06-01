@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="EnquipmentSys"
+  id="myeclipse.1432564022342"
+  context-root="/EnquipmentSys"
+  j2ee-spec="5.0"
+  archive="EnquipmentSys.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

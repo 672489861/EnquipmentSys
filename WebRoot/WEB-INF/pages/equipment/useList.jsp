@@ -2,10 +2,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
  <script>
-	function deleteEquipment(id){
-		if(confirm("你确定删除这条记录么?")){
+	function repairEquipment(id){
+		if(confirm("你确定保修该设备么?")){
 			$.ajax({
-				url:"${pageContext.request.contextPath}/equipment/delete.json",
+				url:"${pageContext.request.contextPath}/repair/repairEquipment.json",
 				type:"post",
 				data:{
 					id:id
@@ -13,10 +13,10 @@
 				cache:false,
 				success:function(result){
 					if(result.success){
-						alert("删除成功!");
-						window.location.href="${pageContext.request.contextPath}/equipment/list.do";
+						alert("报修成功!");
+						window.location.href="${pageContext.request.contextPath}/equipment/useList.do";
 					}else{
-						alert("删除失败,请联系管理员!");
+						alert("报修失败!");
 					}
 				}
 			});
@@ -25,8 +25,8 @@
  </script>
     
   	 <div class="row search">
-        <div class="col-sm-10">
-            <form action="${pageContext.request.contextPath}/equipment/list.do" method="post" class="form-inline">
+        <div class="col-sm-12">
+            <form action="${pageContext.request.contextPath}/equipment/useList.do" method="post" class="form-inline">
                 <div class="form-group">
                     <label for="name" class="control-label">设备名称:</label>
                     <input type="text" name="name" id="name" class="form-control" placeholder="请输入设备名称.." value="${s_equipment.name}">
@@ -39,11 +39,6 @@
                     <button class="btn btn-default"><span class="glyphicon glyphicon-search"></span>&nbsp;查询</button>
                 </div>
             </form>
-        </div>
-        <div class="col-sm-2">
-              <div style="float:right;">
-                  <button class="btn btn-primary" onclick="javascript:window.location.href='${pageContext.request.contextPath}/equipment/preSave.do'">添加</button>
-              </div>
         </div>
     </div>
     <div>
@@ -74,8 +69,7 @@
 	  				</c:if>
 	                <td>${equipment.remark}</td>
 	                <td>
-	                    <button class="btn btn-primary" onclick="javascript:window.location.href='${pageContext.request.contextPath}/equipment/preSave.do?id=${equipment.id}'">修改</button>
-	                    <button class="btn btn-danger" onclick="deleteEquipment(${equipment.id})">删除</button>
+	                	<button class="btn btn-info btn-xs" onclick="repairEquipment(${equipment.id})">设备保修</button>
 	                </td>
            		</tr>
             </c:forEach>

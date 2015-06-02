@@ -11,9 +11,18 @@
   <a href="#" class="list-group-item active">
     系统菜单
   </a>
-  <a href="${pageContext.request.contextPath}/department/list.do" class="list-group-item">部门管理</a>
-  <a href="${pageContext.request.contextPath}/user/list.do" class="list-group-item">用户管理</a>
-  <a href="${pageContext.request.contextPath}/equipmentType/list.do" class="list-group-item">设备类型管理</a>
-  <a href="${pageContext.request.contextPath}/equipment/list.do" class="list-group-item">采购管理</a>
-  <a href="javascript:logout()" class="list-group-item">安全退出</a>
+  <c:if test="${currentUser.roleName == '管理员'}">
+  	<a href="${pageContext.request.contextPath}/department/list.do" class="list-group-item">部门管理</a>
+  	<a href="${pageContext.request.contextPath}/user/list.do" class="list-group-item">用户管理</a>
+  	<a href="${pageContext.request.contextPath}/equipmentType/list.do" class="list-group-item">设备类型管理</a>
+  	<a href="${pageContext.request.contextPath}/equipment/list.do" class="list-group-item">采购管理</a>
+  </c:if>
+  <c:if test="${currentUser.roleName == '使用者'}">
+  	<a href="${pageContext.request.contextPath}/equipment/useList.do" class="list-group-item">使用设备管理</a>
+  </c:if>
+  <c:if test="${currentUser.roleName == '维修者'}">
+  	<a href="${pageContext.request.contextPath}/repair/repairList.do" class="list-group-item">维修设备管理</a>
+  	<a href="${pageContext.request.contextPath}/repair/repairHistory.do" class="list-group-item">维修历史</a>
+  </c:if>
+    <a href="javascript:logout()" class="list-group-item">安全退出</a>
 </div>

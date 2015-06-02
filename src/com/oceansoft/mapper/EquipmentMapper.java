@@ -102,5 +102,28 @@ public interface EquipmentMapper {
 	 *
 	 */
 	public void save(Equipment equipment);
+
+	/**
+	 * Description: 更新指定设备状态
+	 *         
+	 * @create time 上午11:03:31
+	 *
+	 * @param id
+	 * @return       
+	 *
+	 */
+	public int updateStateWithId(int id);
+
+	/**
+	 * Description: 修改或报废设备更新状态
+	 *         
+	 * @create time 下午2:35:39
+	 *
+	 * @param id
+	 * @param state
+	 * @return       
+	 *
+	 */
+	public int updateStateWithSuccessRepair(int id, int state);
 	
 }

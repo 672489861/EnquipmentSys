@@ -76,6 +76,23 @@
 		where id = #{id}
 	</update>
 	
+	<update id="updateStateWithId" parameterType="Integer">
+		update t_equipment set state = 2 where id = #{id}
+	</update>
+	
+	<update id="updateStateWithSuccessRepair">
+		update t_equipment
+		<set>
+			<if test="param2 == 1">
+				state = 1,
+			</if>
+			<if test="param2 == 2">
+				state = 3,
+			</if>
+		</set>
+		where id = #{param1}
+	</update>
+	
 	<insert id="save" parameterType="equipment">
 		insert into t_equipment values(null,#{name},#{no},#{equipmentType.id},#{state},#{remark})
 	</insert>

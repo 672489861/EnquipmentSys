@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC 
+	    "-//mybatis.org//DTD Mapper 3.0//EN"
+	    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oceansoft.mapper.RepairMapper">
+
+	<resultMap type="repair" id="repairList">
+		<id column="id" property="id" />
+		<result column="userman" property="userman" />
+		<result column="repairman" property="repairman" />
+		<result column="repairTime" property="repairTime" />
+		<result column="finishTime" property="finishTime" />
+		<result column="state" property="state" />
+		<result column="finishState" property="finishState" />
+		<association property="equipment" column="equipmentId"
+			select="com.oceansoft.mapper.EquipmentMapper.getEquipmentById">
+		</association>
+	</resultMap>
+
+	<select id="getRepairList" parameterType="Map" resultMap="repairList">
+		select * from t_repair 
+		<where>
+			<if
+				test="repair.equipment!=null and repair.equipment.name != null and repair.equipment.name != ''">
+				and equipmentId in (select id from t_equipment where name like
+				CONCAT(CONCAT('%',#{repair.equipment.name}),'%'))
+			</if>
+			<if test="repair.finishState != null">
+				and finishState = #{repair.finishState}
+			</if>
+		</where>
+		limit #{start},#{size}
+	</select>
+	
+	<select id="getRepairListTotal" parameterType="repair" resultType="Integer">
+		select count(1) from t_repair 
+		<where>
+			<if
+				test="equipment!=null and equipment.name != null and equipment.name != ''">
+				and equipmentId in (select id from t_equipment where name like
+				CONCAT(CONCAT('%',#{equipment.name}),'%'))
+			</if>
+			<if test="finishState != null">
+				and finishState = #{finishState}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="repairEquipment">
+		insert into t_repair
+		values(null,#{param1},#{param2},null,now(),null,0,1)
+	</insert>
+	
+	<update id="updateState" parameterType="Map">
+		update t_repair set state = #{state}, repairman = #{userName},finishState = 2,finishTime = now() where id = #{id}
+	</update>
+	
+</mapper>

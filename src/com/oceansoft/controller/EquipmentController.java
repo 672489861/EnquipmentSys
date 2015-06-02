@@ -85,6 +85,40 @@ public class EquipmentController {
 
 	/***
 	 * 
+	 * Description: 设备类型主界面查询
+	 *         
+	 * @create time 上午10:54:01
+	 *
+	 * @param equipmentType
+	 * @param model
+	 * @param request
+	 * @return       
+	 *
+	 */
+
+	@RequestMapping("/useList.do")
+	public String useEquipmentList(Equipment equipment, ModelMap model, HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		String page = request.getParameter("page");
+		if (StringUtils.hasText(page)) {
+			equipment = (Equipment) session.getAttribute("s_equipment");
+		} else {
+			page = "1";
+			session.setAttribute("s_equipment", equipment);
+		}
+		Map<String, Object> resultMap = equipmentService.equipmentList(page, equipment);
+		String pageCode = PageUtil.getPagation(request.getContextPath() + "/equipment/useList.do", (Integer) resultMap.get("total"),
+				Integer.parseInt(page), Constants.pageSize);
+		model.addAttribute("modeName", "使用设备管理");
+		model.addAttribute("equipmentList", resultMap.get("equipmentList"));
+		model.addAttribute("pageCode", pageCode);
+		model.addAttribute("mainPage", "/WEB-INF/pages/equipment/useList.jsp");
+		return "main";
+	}
+
+	
+	/***
+	 * 
 	 * Description: 删除设备
 	 *         
 	 * @create time 下午1:27:44
